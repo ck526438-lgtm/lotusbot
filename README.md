@@ -38,6 +38,17 @@
 
 Coûts inclus (spread + 378 $ de commissions). La stratégie est **à peine rentable** dans sa version d'origine : elle sert de base à optimiser (filtre horaire, ratio, stop) — à valider hors échantillon avant tout usage réel. Le rapport complet et la courbe sont joints à chaque release.
 
+### Optimisation (nov. 2026)
+
+1 728 combinaisons testées sur déc. 2024 → avr. 2026, puis jugées sur mai → nov. 2026 (jamais vu pendant la recherche) — workflow *Optimisation (données réelles)*, `python -m lotusbot.optimize`.
+
+- Réglages d'origine hors échantillon : **−5,4 %**, PF 0,78.
+- 10 des 15 meilleurs réglages « sur le papier » **perdent** hors échantillon : la recherche surtout sur-apprend.
+- Réglage retenu par la règle fixée à l'avance (SMA 12/36, tendance 100, stop 2,5×ATR, RR 3, sans sortie tendance) : **+2,1 %**, PF 1,21, DD −12,4 % sur 30 trades — trop peu pour conclure à un avantage réel.
+- Seule tendance constante : stop plus large (2,5×ATR) et pas de sortie anticipée sur la SMA tendance.
+
+**Conclusion : pas d'avantage statistique démontré.** Les paramètres par défaut restent ceux d'origine ; un test sur 10+ ans de données (export MT5 en CSV) est nécessaire avant d'aller plus loin.
+
 ## Ce qui a été corrigé par rapport au script d'origine
 
 1. **Biais d'anticipation** : le script lisait la clôture d'une bougie puis entrait à *l'ouverture de cette même bougie*. LotusBot entre à l'ouverture de la bougie **suivante**.
