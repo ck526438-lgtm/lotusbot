@@ -30,6 +30,14 @@
 - **Risque** : 0,8 % du capital par trade, plafonné par un levier maximal.
 - **Filtre horaire** optionnel (par ex. 7 h – 17 h UTC pour Londres/New York).
 
+## Résultats réels (backtest EURUSD H1, déc. 2024 → nov. 2026, paramètres par défaut)
+
+| Performance | Drawdown max | Trades | Réussite | Profit factor | Espérance |
+|---|---|---|---|---|---|
+| +3,2 % | −10,2 % | 126 | 30 % | 1,05 | +0,04 R |
+
+Coûts inclus (spread + 378 $ de commissions). La stratégie est **à peine rentable** dans sa version d'origine : elle sert de base à optimiser (filtre horaire, ratio, stop) — à valider hors échantillon avant tout usage réel. Le rapport complet et la courbe sont joints à chaque release.
+
 ## Ce qui a été corrigé par rapport au script d'origine
 
 1. **Biais d'anticipation** : le script lisait la clôture d'une bougie puis entrait à *l'ouverture de cette même bougie*. LotusBot entre à l'ouverture de la bougie **suivante**.

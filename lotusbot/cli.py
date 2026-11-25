@@ -101,7 +101,12 @@ def selftest(log_path: str | None = None) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="lotusbot", description="LotusBot — bot de trading EURUSD H1")
+    for stream in (sys.stdout, sys.stderr):  # accents corrects dans la console Windows
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+    p =argparse.ArgumentParser(prog="lotusbot", description="LotusBot — bot de trading EURUSD H1")
     p.add_argument("--version", action="version", version=f"LotusBot {__version__}")
     p.add_argument("--selftest", action="store_true", help=argparse.SUPPRESS)
     p.add_argument("--selftest-log", default=None, help=argparse.SUPPRESS)
