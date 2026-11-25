@@ -1,0 +1,63 @@
+name: Build Windows .exe
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller pytest
+
+      - name: Tests
+        run: pytest -q
+
+      - name: PyInstaller
+        run: >
+          pyinstaller --noconfirm --clean --onefile --windowed
+          --name LotusBot
+          --icon assets/lotus.ico
+          --add-data "assets;assets"
+          --collect-data customtkinter
+          --hidden-import MetaTrader5
+          run_lotusbot.py
+
+      - name: Autotest de l'exe (moteur + interface)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist\LotusBot.exe -ArgumentList "--selftest","--selftest-log","selftest.txt" -Wait -PassThru
+          Get-Content selftest.txt
+          if ($p.ExitCode -ne 0) { throw "Autotest en échec ($($p.ExitCode))" }
+
+      - name: Backtest réel EURUSD H1 (rapport)
+        continue-on-error: true
+        run: python -m lotusbot backtest --out report
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LotusBot-windows
+          path: |
+            dist/LotusBot.exe
+            report/
+
+      - name: Publication de la release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/LotusBot.exe
+          generate_release_notes: true

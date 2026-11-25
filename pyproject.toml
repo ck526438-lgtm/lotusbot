@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lotusbot"
+version = "1.0.0"
+description = "LotusBot — bot de trading EURUSD H1 : backtest, signaux temps réel et exécution MetaTrader 5"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "pandas>=2.1", "numpy>=1.26", "matplotlib>=3.8", "yfinance>=0.2.50",
+  "customtkinter>=5.2", "pillow>=10.0",
+  "MetaTrader5>=5.0.45; sys_platform == 'win32'",
+]
+
+[project.scripts]
+lotusbot = "lotusbot.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["lotusbot*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
